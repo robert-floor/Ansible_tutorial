@@ -1,9 +1,11 @@
 ---
 - hosts: loadbalancer
   become: true
+  gather_facts: false
   tasks:
     - name: verify nginx service
       command: service nginx status
+      changed_when: false
     
     - name: verify nginx is listening on 80
       wait_for: port=80 timeout=1
@@ -13,6 +15,7 @@
   tasks:
     - name: verify apache2 service
       command: service apache2 status
+      changed_when: false
 
     - name: verify apache is listening on 80
       wait_for: host={{ansible_eth0.ipv4.address}} port=80 timeout=1
@@ -23,11 +26,13 @@
   tasks:
     - name: verify mysql service
       command: service mysql status
+      changed_when: false
 
     - name: verify mysql is listening on 3306
       wait_for: host={{ansible_eth0.ipv4.address}} port=3306 timeout=1
 
 - hosts: control
+  gather_facts: false
   tasks:
     - name: verify end to end response
       uri: url=http://lb01:8001 return_content=yes
@@ -44,6 +49,7 @@
       when: "'Database Connected from' not in lb_db.content"
 
 - hosts: loadbalancer
+  gather_facts: false
   tasks:
     - name: verify backend index response
       uri: url=http://{{item}} return_content=yes

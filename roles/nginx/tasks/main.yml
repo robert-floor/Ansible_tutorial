@@ -1,21 +1,22 @@
 ---
 # tasks file for nginx
 - name: install tool
-  apt: name={{item}} state=present update_cache=yes
+  apt: name={{item}} state=present
   with_items:
     - python-httplib2
+  tags: ['packages']
 
 - name: install nginx
   apt:
     name: nginx
-    update_cache: yes
     state: present
+  tags: ['packages']
 
 - name: install curl
   apt:
     name: curl
-    update_cache: yes
     state: present
+  tags: ['packages']
 
 
 - name: configure nginx sites
@@ -26,6 +27,11 @@
 - name: get active sites
   shell: ls -1 /etc/nginx/sites-enabled
   register: active
+  tags: ['configure']
+
+- name: Debug the stdoud lines
+  ansible.builtin.debug:
+    var: active.stdout_lines
 
 - name: Show facts available on the system
   ansible.builtin.debug:

@@ -1,4 +1,5 @@
 ---
  - hosts: control
+   gather_facts: false
    roles: 
      - control
