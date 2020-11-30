@@ -1,0 +1,6 @@
+---
+# tasks file for control
+- name: install tools
+  community.general.homebrew:
+    name: curl
+    state: present
